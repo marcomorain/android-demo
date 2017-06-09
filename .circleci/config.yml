@@ -1,0 +1,59 @@
+version: 2
+jobs:
+  build:
+    resource_class: xlarge
+    docker:
+      - image: marcomorain/android:0.11
+    environment:
+      QEMU_AUDIO_DRV: none
+      TERM: dumb
+      #     ADB_TRACE: all
+      _JAVA_OPTIONS: -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap
+    working_directory: /home/circleci/repo
+    steps:
+      - checkout
+      - run:
+          name: Start Emulator
+          command: |
+            env
+            echo done env
+            java -version
+            avdmanager create avd --name pixel --device pixel --tag google_apis --package 'system-images;android-25;google_apis;armeabi-v7a'
+            #emulator -memory 256 -verbose -no-boot-anim -gpu swiftshader -no-audio -no-window -avd pixel
+            emulator -memory 1024 -gpu swiftshader -no-audio -no-window -avd pixel
+          background: true
+          #     - run:
+        #name: Logcat
+          #command:
+            #           adb logcat
+            #  background: true
+      - restore_cache:
+          key: cache-7-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
+
+      - run:
+          name: Compile
+          command: ./gradlew assemble assembleAndroidTest
+      - save_cache:
+          key: cache-7-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
+          paths:
+            - ~/.m2
+            - ~/.android/cache/
+            - ~/.gradle
+      - run:
+          name: Wait for simulator
+          command: ./circle-android wait-for-boot
+      - run:
+          name: Wake Simulator
+          command: |
+            trap "echo trapped; ps aux --sort -rss; exit" SIGHUP SIGINT SIGTERM SIGKILL
+            echo -- Devices
+            adb devices -l
+            echo -- PS
+            ps aux --sort -rss
+            echo -- Key Event
+            adb shell input keyevent 82
+      - run:
+          name: Test
+          command: sleep 30 ; ./gradlew connectedAndroidTest
+
+
