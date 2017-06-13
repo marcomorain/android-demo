@@ -22,11 +22,10 @@ jobs:
             #emulator -memory 256 -verbose -no-boot-anim -gpu swiftshader -no-audio -no-window -avd pixel
             emulator -memory 1024 -gpu swiftshader -no-audio -no-window -avd pixel
           background: true
-          #     - run:
-        #name: Logcat
-          #command:
-            #           adb logcat
-            #  background: true
+      - run:
+          name: Logcat
+          command: adb logcat
+          background: true
       - restore_cache:
           key: cache-7-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
 
