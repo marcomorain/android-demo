@@ -51,9 +51,10 @@ jobs:
             echo -- PS
             ps aux --sort -rss
             echo -- Key Event
+            sleep 60
             adb shell input keyevent 82
       - run:
           name: Test
-          command: sleep 30 ; ./gradlew connectedAndroidTest
+          command: ./gradlew connectedAndroidTest
 
 
