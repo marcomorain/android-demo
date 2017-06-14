@@ -4,31 +4,26 @@ from sys import argv, exit, stdout
 from time import sleep
 from os import system
 from subprocess import check_output, CalledProcessError
-from threading import Thread
+from threading import Thread, Event
 
-class Spinner:
-    busy = False
-    delay = 2
+class StoppableThread(Thread):
 
-    def __init__(self, delay=None):
-        if delay and float(delay): self.delay = delay
+  def __init__(self):
+    super(StoppableThread, self).__init__()
+    self._stop_event = Event()
+    self.daemon = True
 
-    def spinner_task(self):
-        while self.busy:
-            stdout.write('.')
-            stdout.flush()
-            sleep(self.delay)
+  def stopped(self):
+    return self._stop_event.is_set()
 
-    def start(self):
-        self.busy = True
-        thread = Thread(target=self.spinner_task)
-        thread.daemon = True
-        thread.start()
+  def run(self):
+    while not self.stopped():
+      stdout.write('.')
+      stdout.flush()
+      sleep(2)
 
-    def stop(self):
-        self.busy = False
-        sleep(self.delay)
-
+  def stop(self):
+    self._stop_event.set()
 
 def shell_getprop(name):
     try:
@@ -36,31 +31,9 @@ def shell_getprop(name):
     except CalledProcessError as e:
         return ''
 
-"""
-adb_shell_getprop () {
-    adb shell getprop $1 | tr -d [:space:] # delete the whitespace
-}
-device_actually_ready () {
-    # https://devmaze.wordpress.com/2011/12/12/starting-and-stopping-android-emulators/
-    [ "$(adb_shell_getprop init.svc.bootanim)" = "stopped" ]
-}
-if [ "$1" == "wait-for-boot" ]
-then
-    # wait for the device to respond to shell commands
-    spin_until adb shell true 2> /dev/null
-    echo adb shell connected.
-    # wait for the emulator to be completely finished booting.
-    # adb wait-for-device is not sufficient for this.
-    spin_until device_actually_ready
-    echo Boot animation complete.
-else
-i
-
-"""
-
 def wait_for(name, fn):
   stdout.write('Waiting for %s' % name)
-  spinner = Spinner()
+  spinner = StoppableThread()
   spinner.start()
   stdout.flush()
   while True:
