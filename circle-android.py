@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
 from sys import argv, exit, stdout
-from time import sleep
+from time import sleep, time
 from os import system
 from subprocess import check_output, CalledProcessError
 from threading import Thread, Event
+from functools import partial
 
 class StoppableThread(Thread):
 
@@ -31,6 +32,8 @@ def shell_getprop(name):
     except CalledProcessError as e:
         return ''
 
+start_time = time()
+
 def wait_for(name, fn):
   stdout.write('Waiting for %s' % name)
   spinner = StoppableThread()
@@ -39,7 +42,7 @@ def wait_for(name, fn):
   while True:
     if fn():
       spinner.stop()
-      print('\n%s is ready' % name)
+      print('\n%s is ready at + %s second' % (name, time() - start_time))
       break
     sleep(1)
 
@@ -50,8 +53,12 @@ def device_ready():
 def shell_ready():
     return system('adb shell true &> /dev/null') == 0
 
-def boot_anim_complete():
-    return shell_getprop('init.svc.bootanim') == 'stopped'
+def prop_has_value(prop, value):
+    return shell_getprop(prop) == value
+
+def wait_for_sys_prop(name, prop, value):
+    #     return shell_getprop('init.svc.bootanim') == 'stopped'
+    wait_for(name, partial(prop_has_value, prop, value))
 
 usage = """
 %s, a collection of tools for CI with android.
@@ -69,9 +76,10 @@ if __name__ == "__main__":
 
     wait_for('device', device_ready)
     wait_for('shell', shell_ready)
-    wait_for('boot', boot_anim_complete)
-
-
-
+    wait_for_sys_prop('boot', 'init.svc.bootanim', 'stopped')
+    wait_for_sys_prop('boot exit', 'service.bootanim.exit', '1')
+    wait_for_sys_prop('sys.boot_completed', 'sys.boot_completed', '1')
+    wait_for_sys_prop('sim', 'gsm.sim.state', 'READY')
+    wait_for_sys_prop('init.svc.clear-bcb' ,'init.svc.clear-bcb', 'stopped')
 
 
