@@ -42,10 +42,10 @@ def wait_for(name, fn):
   while True:
     if fn():
       spinner.stop()
-      print('\n%s is ready at + %s second' % (name, time() - start_time))
+      time_taken = int(time() - start_time)
+      print('\n%s is ready after %d seconds' % (name, time_taken))
       break
     sleep(1)
-
 
 def device_ready():
     return system('adb wait-for-device') == 0
@@ -74,12 +74,12 @@ if __name__ == "__main__":
         print(usage % (argv[0], argv[0]))
         exit(0)
 
-    wait_for('device', device_ready)
-    wait_for('shell', shell_ready)
-    wait_for_sys_prop('boot', 'init.svc.bootanim', 'stopped')
-    wait_for_sys_prop('boot exit', 'service.bootanim.exit', '1')
-    wait_for_sys_prop('sys.boot_completed', 'sys.boot_completed', '1')
-    wait_for_sys_prop('sim', 'gsm.sim.state', 'READY')
-    wait_for_sys_prop('init.svc.clear-bcb' ,'init.svc.clear-bcb', 'stopped')
+    wait_for('Device', device_ready)
+    wait_for('Shell', shell_ready)
+    wait_for_sys_prop('Boot animation complete', 'init.svc.bootanim', 'stopped')
+    wait_for_sys_prop('Boot animation exited', 'service.bootanim.exit', '1')
+    wait_for_sys_prop('System boot complete', 'sys.boot_completed', '1')
+    wait_for_sys_prop('GSM Ready', 'gsm.sim.state', 'READY')
+    #wait_for_sys_prop('init.svc.clear-bcb' ,'init.svc.clear-bcb', 'stopped')
 
 
