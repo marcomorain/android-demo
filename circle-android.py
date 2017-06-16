@@ -80,6 +80,6 @@ if __name__ == "__main__":
     wait_for_sys_prop('boot exit', 'service.bootanim.exit', '1')
     wait_for_sys_prop('sys.boot_completed', 'sys.boot_completed', '1')
     wait_for_sys_prop('sim', 'gsm.sim.state', 'READY')
-    wait_for_sys_prop('init.svc.clear-bcb' ,'init.svc.clear-bcb', 'stopped')
+    #wait_for_sys_prop('init.svc.clear-bcb' ,'init.svc.clear-bcb', 'stopped')
 
 
