@@ -1,0 +1,43 @@
+machine:
+  environment:
+    QEMU_AUDIO_DRV: none
+    TERM: dumb
+    SDK_VERSION: sdk-tools-linux-3859397.zip
+    ANDROID_HOME: /opt/android/sdk
+    PATH: ${ANDROID_HOME}/emulator:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:${PATH}
+
+dependencies:
+  pre:
+    - sudo mkdir -p ${ANDROID_HOME} && sudo chown -R ubuntu:ubuntu ${ANDROID_HOME}
+    - curl --output /tmp/${SDK_VERSION} https://dl.google.com/android/repository/${SDK_VERSION}
+    - unzip -q /tmp/${SDK_VERSION} -d ${ANDROID_HOME}
+    - rm /tmp/${SDK_VERSION}
+    - yes | sdkmanager --verbose --licenses
+    - echo y | sdkmanager "tools"
+    - echo y | sdkmanager "platform-tools"
+    - echo y | sdkmanager "extras;android;m2repository"
+    - echo y | sdkmanager "extras;google;m2repository"
+    - echo y | sdkmanager "extras;google;google_play_services"
+    - echo y | sdkmanager "emulator"
+    - echo y | sdkmanager "build-tools;25.0.3"
+    - echo y | sdkmanager "platforms;android-25"
+    - echo y | sdkmanager "system-images;android-25;google_apis;armeabi-v7a"
+    - avdmanager create avd --name pixel --device pixel --tag google_apis --package 'system-images;android-25;google_apis;armeabi-v7a'
+    - emulator -verbose -gpu swiftshader -no-audio -no-window -avd pixel:
+        background: true
+  background: true
+  cache_directories:
+    - ~/.m2
+    - ~/.android/cache/
+    - ~/.gradle
+
+compile:
+  override:
+    - ./gradlew assemble assembleAndroidTest -PdisablePreDex
+test:
+  override:
+    - ./circle-android.py wait-for-boot
+    - adb shell input keyevent 82
+    - adb shell settings put system screen_off_timeout 600000
+    - ./gradlew connectedAndroidTest
+
