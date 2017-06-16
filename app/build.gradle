@@ -46,3 +46,26 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
 }
+
+apply plugin: "ru.gildor.gradle.firebase.testlab"
+
+firebaseTestLab {
+    gcloudPath = "/usr/lib/google-cloud-sdk/bin/"
+    bucketName = "android_ci"
+
+    copyArtifact {
+        video = true
+        instrumentation = true
+    }
+
+    matrices {
+
+        nexus7 {
+            // [REQUIRED] API level of devices
+            androidApiLevels = [25]
+            // [REQUIRED] Names of devices.
+            deviceIds = ["flo"]
+        }
+
+    }
+}
