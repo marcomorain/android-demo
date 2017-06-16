@@ -54,12 +54,19 @@ jobs:
             echo -- Screen timeout
             adb shell settings put system screen_off_timeout 600000
 
-      - run: adb push app/build/outputs/apk/app-debug-androidTest.apk /data/local/tmp/com.circleci.demoapplication.test
       - run:
-          command: adb shell pm install -r /data/local/tmp/com.circleci.demoapplication.test
-          no_output_timeout: 30m
+          name: Test on Device
+          command: ./gradlew connectedAndroidTest
+          no_output_timeout: 60m
           environment:
             ADB_TRACE: all
-      - run: adb shell am instrument -w -r -e debug false -e class com.circleci.demoapplication.ExampleInstrumentedTest#shouldFail com.circleci.demoapplication.test/android.support.test.runner.AndroidJUnitRunner
+        #- run: adb shell am instrument -w -r -e debug false -e class com.circleci.demoapplication.ExampleInstrumentedTest#shouldFail com.circleci.demoapplication.test/android.support.test.runner.AndroidJUnitRunner
+        #  adb push app/build/outputs/apk/app-debug-androidTest.apk /data/local/tmp/com.circleci.demoapplication.test
+        #- run:
+        #  command: adb shell pm install -r /data/local/tmp/com.circleci.demoapplication.test
+        #  no_output_timeout: 30m
+        #  environment:
+        #    ADB_TRACE: all
+        #- run: adb shell am instrument -w -r -e debug false -e class com.circleci.demoapplication.ExampleInstrumentedTest#shouldFail com.circleci.demoapplication.test/android.support.test.runner.AndroidJUnitRunner
 
 
