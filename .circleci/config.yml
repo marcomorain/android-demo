@@ -12,6 +12,7 @@ jobs:
     working_directory: /home/circleci/repo
     steps:
       - checkout
+      - run: nohup ./gradlew
       - run:
           name: Start Emulator
           command: |
