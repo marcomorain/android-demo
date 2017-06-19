@@ -13,7 +13,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Gradle Daemin
+          name: Gradle Daemon
           command: ./gradlew --daemon --foreground
           background: true
       - run:
@@ -26,9 +26,11 @@ jobs:
             #emulator -memory 256 -verbose -no-boot-anim -gpu swiftshader -no-audio -no-window -avd pixel
             emulator -verbose -gpu swiftshader -no-audio -no-window -avd pixel
           background: true
+      - run: ./gradlew build
+      - run: ./gradlew assemble
       - run:
           name: Wait for simulator
-          command: circle-android wait-for-boot
+          command: echo circle-android wait-for-boot
       - run:
           name: Logcat
           command: adb logcat
