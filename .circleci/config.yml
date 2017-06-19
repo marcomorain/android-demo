@@ -12,7 +12,10 @@ jobs:
     working_directory: /home/circleci/repo
     steps:
       - checkout
-      - run: nohup ./gradlew
+      - run:
+          name: Gradle Daemin
+          command: ./gradlew --daemon --foreground
+          background: true
       - run:
           name: Start Emulator
           command: |
