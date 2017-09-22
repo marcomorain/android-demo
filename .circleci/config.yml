@@ -7,6 +7,10 @@ jobs:
       _JAVA_OPTIONS: -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - cache-7-{{ checksum "build.gradle" }}-{{ checksum "app/build.gradle" }}
+            - cache-7-
       - run: ./gradlew tasks
       - run:
           name: Compile
