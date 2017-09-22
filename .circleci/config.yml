@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circlec/android:api-25-alpha
+      - image: circleci/android:api-25-alpha
     environment:
       _JAVA_OPTIONS: -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap
     steps:
