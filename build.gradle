@@ -10,9 +10,10 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'
-        classpath "gradle.plugin.ru.gildor.gradle.firebase.testlab:firebase-test-lab:0.1.1"
+        classpath "gradle.plugin.firebase.test.lab:firebase-test-lab:0.7.2"
     }
 }
+
 
 task clean(type: Delete) {
     delete rootProject.buildDir

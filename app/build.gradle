@@ -47,10 +47,10 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
-apply plugin: "ru.gildor.gradle.firebase.testlab"
+apply plugin: "firebase.test.lab"
 
 firebaseTestLab {
-    gcloudPath = "/usr/lib/google-cloud-sdk/bin/"
+    cloudSdkPath = "/usr/lib/google-cloud-sdk/bin"
     bucketName = "android_ci"
 
     copyArtifact {
