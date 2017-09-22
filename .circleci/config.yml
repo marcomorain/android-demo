@@ -7,7 +7,6 @@ jobs:
       _JAVA_OPTIONS: -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap
     steps:
       - checkout
-          name: Start Emulator
       - run:
           name: Compile
           command: ./gradlew assemble assembleAndroidTest -PdisablePreDex
