@@ -1,0 +1,90 @@
+15a16
+> [init.svc.bootanim]: [running]
+147a149
+> [service.bootanim.exit]: [0]
+45c45
+< [net.change]: [net.gprs.local-ip]
+---
+> [net.change]: [net.eth0.dns2]
+46a47
+> [net.eth0.dns2]: [10.0.2.4]
+23c23
+< [init.svc.goldfish-setup]: [running]
+---
+> [init.svc.goldfish-setup]: [stopped]
+154a155
+> [sys.sysctl.extra_free_kbytes]: [1800]
+42a43
+> [log.tag.WifiHAL]: [D]
+159a161
+> [wlan.driver.status]: [unloaded]
+46c46
+< [net.change]: [net.eth0.dns2]
+---
+> [net.change]: [net.hostname]
+50a51
+> [net.hostname]: [android-b39ff97942ba0372]
+13a14
+> [debug.force_rtl]: [0]
+47c47
+< [net.change]: [net.hostname]
+---
+> [net.change]: [net.qtaguid_enabled]
+52a53
+> [net.qtaguid_enabled]: [1]
+14a15
+> [gsm.version.ril-impl]: [android reference-ril 1.0]
+14a15,20
+> [gsm.current.phone-type]: [1]
+> [gsm.network.type]: [Unknown]
+> [gsm.sim.operator.alpha]: []
+> [gsm.sim.operator.iso-country]: []
+> [gsm.sim.operator.numeric]: []
+> [gsm.sim.state]: [NOT_READY]
+16c16,19
+< [gsm.network.type]: [Unknown]
+---
+> [gsm.network.type]: [LTE]
+> [gsm.operator.alpha]: [Android]
+> [gsm.operator.iso-country]: [us]
+> [gsm.operator.numeric]: [310260]
+18a19
+> [gsm.operator.isroaming]: [false]
+14a15
+> [dev.bootcomplete]: [1]
+28c29
+< [init.svc.bootanim]: [running]
+---
+> [init.svc.bootanim]: [stopped]
+165c166
+< [service.bootanim.exit]: [0]
+---
+> [service.bootanim.exit]: [1]
+169a171
+> [sys.boot_completed]: [1]
+25c25
+< [gsm.sim.state]: [NOT_READY]
+---
+> [gsm.sim.state]: [READY]
+22,24c22,24
+< [gsm.sim.operator.alpha]: []
+< [gsm.sim.operator.iso-country]: []
+< [gsm.sim.operator.numeric]: []
+---
+> [gsm.sim.operator.alpha]: [Android]
+> [gsm.sim.operator.iso-country]: [us]
+> [gsm.sim.operator.numeric]: [310260]
+16a17
+> [gsm.defaultpdpcontext.active]: [true]
+60c60,62
+< [net.change]: [net.qtaguid_enabled]
+---
+> [net.change]: [net.dns2]
+> [net.dns1]: [10.0.2.3]
+> [net.dns2]: [10.0.2.4]
+173a176
+> [sys.sysctl.tcp_def_init_rwnd]: [60]
+162a163
+> [ro.runtime.firstboot]: [924355]
+31a32
+> [init.svc.clear-bcb]: [stopped]
